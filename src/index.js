@@ -21,7 +21,7 @@ import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 
 import AdminLayout from "layouts/Admin/Admin.js";
 import RTLLayout from "layouts/RTL/RTL.js";
-
+import UserForm from "components/Form/Form";
 import "assets/scss/black-dashboard-react.scss";
 import "assets/demo/demo.css";
 import "assets/css/nucleo-icons.css";
@@ -44,6 +44,7 @@ root.render(
             path="/"
             element={<Interview />}
           />
+          <Route path="/signup" element={<UserForm/>}/>
         </Routes>
       </BrowserRouter>
     </BackgroundColorWrapper>
