@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import {
   Grid,
   makeStyles,
@@ -11,11 +11,11 @@ import {
   Button,
   CardHeader,
   FormControl,
-} from "@material-ui/core"
+} from "@material-ui/core";
 
-import { Formik, Form, Field } from "formik"
-import * as Yup from "yup"
-import { TextField } from "formik-material-ui"
+import { Formik, Form, Field } from "formik";
+import * as Yup from "yup";
+import { TextField } from "formik-material-ui";
 
 const useStyle = makeStyles((theme) => ({
   padding: {
@@ -24,7 +24,7 @@ const useStyle = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
   },
-}))
+}));
 const initialValues = {
   firstName: "",
   lastName: "",
@@ -33,7 +33,7 @@ const initialValues = {
   country: "",
   email: "",
   password: "",
-}
+};
 
 const options = [
   { label: "HTML", value: "HTML" },
@@ -41,13 +41,13 @@ const options = [
   { label: "Javascript", value: "Javascript" },
   { label: "React Js", value: "React.js" },
   { label: "Node Js", value: "Node.js" },
-]
+];
 
 //password validation
-const lowercaseRegEx = /(?=.*[a-z])/
-const uppercaseRegEx = /(?=.*[A-Z])/
-const numericRegEx = /(?=.*[0-9])/
-const lengthRegEx = /(?=.{6,})/
+const lowercaseRegEx = /(?=.*[a-z])/;
+const uppercaseRegEx = /(?=.*[A-Z])/;
+const numericRegEx = /(?=.*[0-9])/;
+const lengthRegEx = /(?=.{6,})/;
 
 //validation schema
 let validationSchema = Yup.object().shape({
@@ -66,14 +66,14 @@ let validationSchema = Yup.object().shape({
     .matches(numericRegEx, "Must contain one numeric character!")
     .matches(lengthRegEx, "Must contain 6 characters!")
     .required("Required!"),
-})
+});
 
 const UserForm = () => {
-  const classes = useStyle()
+  const classes = useStyle();
 
   const onSubmit = (values) => {
-    console.log(values)
-  }
+    console.log(values);
+  };
 
   return (
     <Grid container justify="center" spacing={1}>
@@ -83,7 +83,8 @@ const UserForm = () => {
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
-            onSubmit={onSubmit}>
+            onSubmit={onSubmit}
+          >
             {({ dirty, isValid, values, handleChange, handleBlur }) => {
               return (
                 <Form>
@@ -99,8 +100,8 @@ const UserForm = () => {
                           component={TextField}
                         />
                       </Grid>
-                      <Grid item xs={12} sm ={6} md={6}>
-                      <Field
+                      <Grid item xs={12} sm={6} md={6}>
+                        <Field
                           label="Email"
                           variant="outlined"
                           fullWidth
@@ -108,7 +109,7 @@ const UserForm = () => {
                           value={values.email}
                           component={TextField}
                         />
-                        </Grid>
+                      </Grid>
                       {/* <Grid item xs={12} sm={6} md={6}>
                         <Field
                           label="Last Name"
@@ -132,14 +133,15 @@ const UserForm = () => {
                             onChange={handleChange}
                             onBlur={handleBlur}
                             value={values.occupation}
-                            name="occupation">
+                            name="occupation"
+                          >
                             <MenuItem>None</MenuItem>
                             {options.map((item) => (
                               <MenuItem key={item.value} value={item.value}>
                                 {item.label}
                               </MenuItem>
                             ))}
-</Select>
+                          </Select>
                         </FormControl>
                       </Grid>
                       <Grid item xs={12} sm={6} md={6}>
@@ -156,7 +158,7 @@ const UserForm = () => {
                         <Field
                           label="Phone No."
                           variant="outlined"
-                          fullWidth
+                          fullWidthnterview
                           name="Phone No."
                           value={values.country}
                           component={TextField}
@@ -172,7 +174,6 @@ const UserForm = () => {
                           component={TextField}
                         />
                       </Grid>
-                     
                     </Grid>
                   </CardContent>
                   <CardActions>
@@ -181,18 +182,19 @@ const UserForm = () => {
                       variant="contained"
                       color="primary"
                       type="Submit"
-                      className={classes.button}>
+                      className={classes.button}
+                    >
                       REGISTER
                     </Button>
                   </CardActions>
                 </Form>
-              )
+              );
             }}
           </Formik>
         </Card>
       </Grid>
     </Grid>
-  )
-}
+  );
+};
 
-export default UserForm
+export default UserForm;
