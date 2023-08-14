@@ -18,7 +18,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
-
+import Form1 from "components/Form/Form1";
 import AdminLayout from "layouts/Admin/Admin.js";
 import RTLLayout from "layouts/RTL/RTL.js";
 import UserForm from "components/Form/Form";
@@ -45,6 +45,7 @@ root.render(
             element={<Interview />}
           />
           <Route path="/signup" element={<UserForm/>}/>
+          <Route path="/signup1" element={<Form1/>}/>
         </Routes>
       </BrowserRouter>
     </BackgroundColorWrapper>

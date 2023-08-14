@@ -16,6 +16,19 @@
  */
 /*     brand Colors              */
 /* navbar color */
+.formGrid{
+  height:100vh;
+  background-image: url('../img/3409297.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size:cover;
+  margin: 0;
+}
+.formCard{
+  background-color: #a7d6ff!important;
+  border-radius: 30px!important;
+}
+
 :root {
   --blue: #5e72e4;
   --indigo: #5603ad;
