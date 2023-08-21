@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Grid,
   makeStyles,
@@ -16,7 +16,12 @@ import {
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { TextField } from "formik-material-ui";
-
+import "../../assets/css/black-dashboard-react.css";
+import { TableRestaurant } from "@mui/icons-material";
+const uppercaseRegEx = /(?=.*[A-Z])/;
+const numericRegEx = /(?=.*[0-9])/;
+const lengthRegEx = /(?=.{6,})/;
+const lowercaseRegEx = /(?=.*[a-z])/;
 const useStyle = makeStyles((theme) => ({
   padding: {
     padding: theme.spacing(3),
@@ -25,15 +30,6 @@ const useStyle = makeStyles((theme) => ({
     margin: theme.spacing(1),
   },
 }));
-const initialValues = {
-  firstName: "",
-  lastName: "",
-  occupation: "",
-  city: "",
-  country: "",
-  email: "",
-  password: "",
-};
 
 const options = [
   { label: "HTML", value: "HTML" },
@@ -44,84 +40,79 @@ const options = [
 ];
 
 //password validation
-const lowercaseRegEx = /(?=.*[a-z])/;
-const uppercaseRegEx = /(?=.*[A-Z])/;
-const numericRegEx = /(?=.*[0-9])/;
-const lengthRegEx = /(?=.{6,})/;
 
 //validation schema
 let validationSchema = Yup.object().shape({
-  firstName: Yup.string().required("Required"),
-  lastName: Yup.string().required("Required"),
+  name: Yup.string().required("Required"),
+  experience: Yup.number().required("Required"),
+
   email: Yup.string().email("Invalid email").required("Required"),
-  password: Yup.string()
-    .matches(
-      lowercaseRegEx,
-      "Must contain one lowercase alphabetical character!"
-    )
-    .matches(
-      uppercaseRegEx,
-      "Must contain one uppercase alphabetical character!"
-    )
-    .matches(numericRegEx, "Must contain one numeric character!")
-    .matches(lengthRegEx, "Must contain 6 characters!")
-    .required("Required!"),
+  phoneNumber: Yup.number().required("Required"),
 });
+const useStyles = makeStyles((theme) => ({
+  // backgroundImage:url(require("asse"))
+}));
 
 const UserForm = () => {
+  const [Skills, SEtskill] = useState([]);
+  const [displayskills, setDisplayskills] = useState([]);
   const classes = useStyle();
 
+  const initialValues = {
+    name: "",
+    phoneNumber: "",
+    skill: displayskills,
+    experience: "",
+
+    email: "",
+  };
+  const handleChange = (e,values) => {
+    setDisplayskills(e.target.value);
+    values.skill=displayskills
+    console.log(displayskills)
+
+  };
   const onSubmit = (values) => {
     console.log(values);
   };
-
   return (
-    <Grid container justify="center" spacing={1}>
+    <Grid
+      container
+      spacing={1}
+      className="formGrid"
+      justifyContent="center"
+      alignItems="center"
+    >
       <Grid item md={6}>
-        <Card className={classes.padding}>
-          <CardHeader title="REGISTER FORM"></CardHeader>
+        <Card className={`${classes.padding} formCard`}>
+          <CardHeader style={{    color:" #887df8"}} title="REGISTER FORM"></CardHeader>
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={onSubmit}
           >
-            {({ dirty, isValid, values, handleChange, handleBlur }) => {
+            {({ dirty, isValid, values, handleBlur }) => {
+              {
+                console.log(values);
+              }
               return (
                 <Form>
                   <CardContent>
-                    <Grid item container spacing={1} justify="center">
-                      <Grid item xs={12} sm={6} md={6}>
+                    <Grid item container spacing={1} justifyContent="center">
+                      <Grid item xs={12} sm={12} md={12}>
+                        
                         <Field
                           label="Name"
                           variant="outlined"
                           fullWidth
-                          name="firstName"
-                          value={values.firstName}
+                          name="name"
+                          value={values.name}
                           component={TextField}
                         />
                       </Grid>
-                      <Grid item xs={12} sm={6} md={6}>
-                        <Field
-                          label="Email"
-                          variant="outlined"
-                          fullWidth
-                          name="email"
-                          value={values.email}
-                          component={TextField}
-                        />
-                      </Grid>
-                      {/* <Grid item xs={12} sm={6} md={6}>
-                        <Field
-                          label="Last Name"
-                          variant="outlined"
-                          fullWidth
-                          name="lastName"
-                          value={values.lastName}
-                          component={TextField}
-                        />
-                      </Grid> */}
+                  
 
-                      <Grid item xs={12} sm={6} md={12}>
+                      <Grid item xs={12} sm={12} md={12}>
                         <FormControl fullWidth variant="outlined">
                           <InputLabel id="demo-simple-select-outlined-label">
                             Skills
@@ -130,11 +121,13 @@ const UserForm = () => {
                             labelId="demo-simple-select-outlined-label"
                             id="demo-simple-select-outlined"
                             label="Occupation"
-                            onChange={handleChange}
+                            onChange={(e) => handleChange(e,values)}
                             onBlur={handleBlur}
-                            value={values.occupation}
-                            name="occupation"
+                            value={displayskills}
+                            name="skill"
+                            multiple
                           >
+                            {console.log(displayskills)}
                             <MenuItem>None</MenuItem>
                             {options.map((item) => (
                               <MenuItem key={item.value} value={item.value}>
@@ -144,27 +137,27 @@ const UserForm = () => {
                           </Select>
                         </FormControl>
                       </Grid>
-                      <Grid item xs={12} sm={6} md={6}>
+                      <Grid item xs={12} sm={12} md={12}>
                         <Field
                           label="Experience"
                           variant="outlined"
                           fullWidth
-                          name="Experince"
-                          value={values.city}
+                          name="experience"
+                          value={values.experience}
                           component={TextField}
                         />
                       </Grid>
-                      <Grid item xs={12} sm={6} md={6}>
+                      <Grid item xs={12} sm={12} md={12}>
                         <Field
                           label="Phone No."
                           variant="outlined"
-                          fullWidthnterview
-                          name="Phone No."
-                          value={values.country}
+                          fullWidth
+                          name="phoneNumber"
+                          value={values.phoneNumber}
                           component={TextField}
                         />
                       </Grid>
-                      <Grid item xs={12} sm={6} md={6}>
+                      <Grid item xs={12} sm={12} md={12}>
                         <Field
                           label="Email"
                           variant="outlined"
