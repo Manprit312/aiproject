@@ -16,26 +16,34 @@ import {
   Container,
 } from "reactstrap";
 import axios from "axios";
+
 import NotificationAlert from "react-notification-alert";
 import Webcam from "react-webcam";
 const ChatWindow = ({ messages, sendMessage }) => {
   const [message, setmessage] = useState([]);
+  const [micColor, setMicColor] = useState("error");
   const [ready, setready] = useState(false);
   const handleMessageChange = (e) => {
     const data = { messege: e.target.value, id: 2 };
-    setmessage([...message, data]);
+    // setmessage([...message, data]);
+    setSpokenText(data);
   };
+  const [spokentext, setSpokenText] = useState({});
+
   useEffect(() => {
     getQuestion();
   }, []);
   const [textToRead, setTextToRead] = useState("");
   const [speechRecognitionAvailable, setSpeechRecognitionAvailable] =
     useState(false);
-
+  var text = [];
   const { listen, stop } = useSpeechRecognition({
     onResult: (result) => {
       const data = { messege: result, id: 2 };
-      setmessage([...message, data]);
+      // setmessage([...message, data]);
+
+      // text.push(result).toString();
+      setSpokenText(data);
     },
   });
   const getQuestion = async () => {
@@ -53,6 +61,7 @@ const ChatWindow = ({ messages, sendMessage }) => {
     return false;
   };
   console.log(message);
+  console.log(listen, "llllllllllllll");
   // Initialize the speech recognition object
   const initializeSpeechRecognition = () => {
     const SpeechRecognition =
@@ -74,19 +83,31 @@ const ChatWindow = ({ messages, sendMessage }) => {
 
     recognition.start();
   };
+  const micOff = () => {
+    setmessage([...message, spokentext]);
+    setMicColor("error");
+    stop();
+  };
 
+  const micControl = () => {
+    console.log("prinary");
+    setMicColor("primary");
+    listen();
+  };
   // Initialize speech synthesis and read the provided text
   const readText = () => {
     const synth = window.speechSynthesis;
     const utterance = new SpeechSynthesisUtterance(textToRead);
     synth.speak(utterance);
   };
-  const handleSendMessage = () => {};
+
+  const handleSendMessage = () => {
+    setmessage([...message, spokentext]);
+  };
 
   return (
     <div className="content">
       <Row>
-        {" "}
         <Col md={"6"}>
           <Webcam />
         </Col>
@@ -102,6 +123,11 @@ const ChatWindow = ({ messages, sendMessage }) => {
               >
                 Live Interview Chat
               </h1>
+              <textarea
+                style={{ height: "113px" }}
+                defaultValue={spokentext.messege}
+                onChange={(e) => handleMessageChange(e)}
+              />
               <CardBody>
                 {message.map((message, index) =>
                   message.id == 2 ? (
@@ -126,21 +152,17 @@ const ChatWindow = ({ messages, sendMessage }) => {
                 >
                   <FormGroup>
                     <Mic
-                      onMouseDown={listen}
-                      onMouseUp={stop}
+                      onClick={() => micControl()}
+                      onDoubleClick={() => micOff()}
                       style={{
                         padding: " 6px",
                         width: "40px",
+                        cursor: "pointer",
                         borderRadius: "25px",
                         background: " aliceblue",
                         height: "40px",
                       }}
-                    />
-
-                    <textarea
-                      style={{ display: "none" }}
-                      value={message}
-                      onChange={(e) => handleMessageChange(e)}
+                      color={micColor}
                     />
                   </FormGroup>
 
