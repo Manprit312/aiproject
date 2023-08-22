@@ -23,9 +23,13 @@ const ChatWindow = ({ messages, sendMessage }) => {
   const [message, setmessage] = useState([]);
   const [micColor, setMicColor] = useState("error");
   const [ready, setready] = useState(false);
+  const [Question, setQuestion] = useState("");
+  const [Answer, setAnswer] = useState("");
+  const [Accu, setAccuracy] = useState("");
   const handleMessageChange = (e) => {
     const data = { messege: e.target.value, id: 2 };
     // setmessage([...message, data]);
+    // setAnswer(e.target.value);
     setSpokenText(data);
   };
   const [spokentext, setSpokenText] = useState({});
@@ -51,7 +55,8 @@ const ChatWindow = ({ messages, sendMessage }) => {
     const res = await axios.post("http://localhost:5000/chatapiquestion", data);
 
     setmessage([...message, res.data]);
-    console.log(message);
+ 
+    setQuestion(res.data.messege.slice(4));
   };
 
   const checkSpeechRecognition = () => {
@@ -100,6 +105,13 @@ const ChatWindow = ({ messages, sendMessage }) => {
     const utterance = new SpeechSynthesisUtterance(textToRead);
     synth.speak(utterance);
   };
+  const Accuracy = async () => {
+    const data = { question: Question, answer: spokentext.messege };
+    const res = axios.post("http://localhost:5000/checkAnswer", data);
+
+   
+    setAccuracy(res);
+  };
 
   const handleSendMessage = () => {
     setmessage([...message, spokentext]);
@@ -131,7 +143,10 @@ const ChatWindow = ({ messages, sendMessage }) => {
               <CardBody>
                 {message.map((message, index) =>
                   message.id == 2 ? (
-                    <UncontrolledAlert color="danger" key={index}>
+                    <UncontrolledAlert
+                      color={Accu =="The answer to this question does not match the question so the accuracy percentage would be 0%." ? "danger" : "success"}
+                      key={index}
+                    >
                       {message.messege}
                     </UncontrolledAlert>
                   ) : (
@@ -179,6 +194,14 @@ const ChatWindow = ({ messages, sendMessage }) => {
                 </div>
               </CardBody>
             </Card>
+            <Button
+              style={{ width: "100%" }}
+              block
+              color="success"
+              onClick={() => Accuracy()}
+            >
+                                  checkSpeechRecognition                  {" "}
+            </Button>
           </Container>
         </Col>
       </Row>

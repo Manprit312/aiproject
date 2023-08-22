@@ -56,7 +56,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 
-const secretchatgpt = "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";
+const secretchatgpt = "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";
 
 const configuration = new Configuration({
   apiKey: secretchatgpt,
@@ -95,10 +95,10 @@ app.post("/checkAnswer", async (req, res) => {
       temperature: 0.7,
     });
     console.log(completion.data.choices[0].text);
-    return res.send({
-      messege: completion.data.choices[0].text,
-      id: 1,
-    });
+    return res.send(
+       completion.data.choices[0].text,
+    
+    );
   } catch (error) {
     console.log(error, ">>>>>>>>>>>>>>>.");
   }
