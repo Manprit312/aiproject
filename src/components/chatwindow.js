@@ -12,28 +12,38 @@ import {
   Container,
 } from "reactstrap";
 import axios from "axios";
+
 import NotificationAlert from "react-notification-alert";
 import Webcam from "react-webcam";
 const ChatWindow = ({ messages, sendMessage }) => {
   const [message, setmessage] = useState([]);
+  const [micColor, setMicColor] = useState("error");
+  const [ready, setready] = useState(false);
   const [Question, setQuestion] = useState("");
   const [Answer, setAnswer] = useState("");
+  const [Accu, setAccuracy] = useState("");
   const handleMessageChange = (e) => {
     const data = { messege: e.target.value, id: 2 };
     // setmessage([...message, data]);
-    setAnswer(e.target.value);
+    // setAnswer(e.target.value);
+    setSpokenText(data);
   };
+  const [spokentext, setSpokenText] = useState({});
+
   useEffect(() => {
     getQuestion();
   }, []);
   const [textToRead, setTextToRead] = useState("");
   const [speechRecognitionAvailable, setSpeechRecognitionAvailable] =
     useState(false);
-
+  var text = [];
   const { listen, stop } = useSpeechRecognition({
     onResult: (result) => {
       const data = { messege: result, id: 2 };
-      setmessage([...message, data]);
+      // setmessage([...message, data]);
+
+      // text.push(result).toString();
+      setSpokenText(data);
     },
   });
   const getQuestion = async () => {
@@ -41,12 +51,8 @@ const ChatWindow = ({ messages, sendMessage }) => {
     const res = await axios.post("http://localhost:5000/chatapiquestion", data);
 
     setmessage([...message, res.data]);
-    setQuestion(res.data);
-  };
-  const Accuracy = async () => {
-    const data = { question: Question, answer: Answer };
-    const res = axios.post("http://localhost:5000/checkAnswer", data);
-    console.log(res);
+ 
+    setQuestion(res.data.messege.slice(4));
   };
   const checkSpeechRecognition = () => {
     if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
@@ -55,6 +61,7 @@ const ChatWindow = ({ messages, sendMessage }) => {
     return false;
   };
   console.log(message);
+  console.log(listen, "llllllllllllll");
   // Initialize the speech recognition object
   const initializeSpeechRecognition = () => {
     const SpeechRecognition =
@@ -76,19 +83,38 @@ const ChatWindow = ({ messages, sendMessage }) => {
 
     recognition.start();
   };
+  const micOff = () => {
+    setmessage([...message, spokentext]);
+    setMicColor("error");
+    stop();
+  };
 
+  const micControl = () => {
+    console.log("prinary");
+    setMicColor("primary");
+    listen();
+  };
   // Initialize speech synthesis and read the provided text
   const readText = () => {
     const synth = window.speechSynthesis;
     const utterance = new SpeechSynthesisUtterance(textToRead);
     synth.speak(utterance);
   };
-  const handleSendMessage = () => {};
+  const Accuracy = async () => {
+    const data = { question: Question, answer: spokentext.messege };
+    const res = axios.post("http://localhost:5000/checkAnswer", data);
+
+   
+    setAccuracy(res);
+  };
+
+  const handleSendMessage = () => {
+    setmessage([...message, spokentext]);
+  };
 
   return (
     <div className="content">
       <Row>
-        {" "}
         <Col md={"6"}>
           <Webcam />
         </Col>
@@ -104,10 +130,18 @@ const ChatWindow = ({ messages, sendMessage }) => {
               >
                 Live Interview Chat
               </h1>
+              <textarea
+                style={{ height: "113px" }}
+                defaultValue={spokentext.messege}
+                onChange={(e) => handleMessageChange(e)}
+              />
               <CardBody>
                 {message.map((message, index) =>
                   message.id == 2 ? (
-                    <UncontrolledAlert color="danger" key={index}>
+                    <UncontrolledAlert
+                      color={Accu =="The answer to this question does not match the question so the accuracy percentage would be 0%." ? "danger" : "success"}
+                      key={index}
+                    >
                       {message.messege}
                     </UncontrolledAlert>
                   ) : (
@@ -127,22 +161,18 @@ const ChatWindow = ({ messages, sendMessage }) => {
                   }}
                 >
                   <FormGroup>
-                    {/* <Mic
-                      onMouseDown={listen}
-                      onMouseUp={stop}
+                    <Mic
+                      onClick={() => micControl()}
+                      onDoubleClick={() => micOff()}
                       style={{
                         padding: " 6px",
                         width: "40px",
+                        cursor: "pointer",
                         borderRadius: "25px",
                         background: " aliceblue",
                         height: "40px",
                       }}
-                    /> */}
-
-                    <textarea
-                      // style={{ display: "none" }}
-                     
-                      onChange={(e) => handleMessageChange(e)}
+                      color={micColor}
                     />
                   </FormGroup>
 
@@ -167,6 +197,14 @@ const ChatWindow = ({ messages, sendMessage }) => {
                 </div>
               </CardBody>
             </Card>
+            <Button
+              style={{ width: "100%" }}
+              block
+              color="success"
+              onClick={() => Accuracy()}
+            >
+                                  checkSpeechRecognition                  {" "}
+            </Button>
           </Container>
         </Col>
       </Row>
