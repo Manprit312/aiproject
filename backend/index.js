@@ -6,7 +6,6 @@ const bodyParser = require("body-parser");
 const { Configuration, OpenAIApi } = require("openai");
 const app = express();
 
-
 // Set up the server
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -38,9 +37,26 @@ app.post("/chatapiquestion", async (req, res) => {
       id: 1,
     });
   } catch (error) {
-    console.log(error,">>>>>>>>>>>>>>>.");
+    console.log(error, ">>>>>>>>>>>>>>>.");
   }
-
-
+});
+app.post("/checkAnswer", async (req, res) => {
+  try {
+    const completion = await openai.createCompletion({
+      model: "text-davinci-003",
+      prompt: `Check accuracy percentage for answer ${req.body.answer} for question ${req.body.question} `,
+      max_tokens: 1024,
+      n: 1,
+      stop: null,
+      temperature: 0.7,
+    });
+    console.log(completion.data.choices[0].text);
+    return res.send({
+      messege: completion.data.choices[0].text,
+      id: 1,
+    });
+  } catch (error) {
+    console.log(error, ">>>>>>>>>>>>>>>.");
+  }
 });
 app.listen(5000, () => console.log(`Server listening on port `));

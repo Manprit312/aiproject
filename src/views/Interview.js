@@ -5,7 +5,6 @@ import Chat from "../components/Chat/Chat";
 const Interview = () => {
   return (
     <div className="content interview">
-      
       <Chat />
     </div>
   );

@@ -2,17 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Mic } from "@mui/icons-material";
 import { useSpeechRecognition } from "react-speech-kit";
 import {
-  Alert,
   UncontrolledAlert,
   Button,
   Card,
-  CardHeader,
   CardBody,
-  CardTitle,
   Row,
   Col,
   FormGroup,
-  Input,
   Container,
 } from "reactstrap";
 import axios from "axios";
@@ -20,10 +16,12 @@ import NotificationAlert from "react-notification-alert";
 import Webcam from "react-webcam";
 const ChatWindow = ({ messages, sendMessage }) => {
   const [message, setmessage] = useState([]);
-  const [ready, setready] = useState(false);
+  const [Question, setQuestion] = useState("");
+  const [Answer, setAnswer] = useState("");
   const handleMessageChange = (e) => {
     const data = { messege: e.target.value, id: 2 };
-    setmessage([...message, data]);
+    // setmessage([...message, data]);
+    setAnswer(e.target.value);
   };
   useEffect(() => {
     getQuestion();
@@ -43,9 +41,13 @@ const ChatWindow = ({ messages, sendMessage }) => {
     const res = await axios.post("http://localhost:5000/chatapiquestion", data);
 
     setmessage([...message, res.data]);
-    console.log(message);
+    setQuestion(res.data);
   };
-
+  const Accuracy = async () => {
+    const data = { question: Question, answer: Answer };
+    const res = axios.post("http://localhost:5000/checkAnswer", data);
+    console.log(res);
+  };
   const checkSpeechRecognition = () => {
     if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
       return true;
@@ -125,7 +127,7 @@ const ChatWindow = ({ messages, sendMessage }) => {
                   }}
                 >
                   <FormGroup>
-                    <Mic
+                    {/* <Mic
                       onMouseDown={listen}
                       onMouseUp={stop}
                       style={{
@@ -135,11 +137,11 @@ const ChatWindow = ({ messages, sendMessage }) => {
                         background: " aliceblue",
                         height: "40px",
                       }}
-                    />
+                    /> */}
 
                     <textarea
-                      style={{ display: "none" }}
-                      value={message}
+                      // style={{ display: "none" }}
+                     
                       onChange={(e) => handleMessageChange(e)}
                     />
                   </FormGroup>
@@ -153,6 +155,14 @@ const ChatWindow = ({ messages, sendMessage }) => {
                     }}
                   >
                     Submit Answer
+                  </Button>
+                  <Button
+                    style={{ width: "200px" }}
+                    block
+                    color="success"
+                    onClick={() => Accuracy()}
+                  >
+                    checkSpeechRecognition
                   </Button>
                 </div>
               </CardBody>
