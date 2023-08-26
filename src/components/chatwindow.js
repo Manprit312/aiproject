@@ -132,7 +132,7 @@ const ChatWindow = ({ messages, sendMessage }) => {
         <Col md={"6"}>{/* <Webcam /> */}</Col>
         <Col md={"6"}>
           <Container>
-            <Card>
+            <Card style={{height:"100vh"}}>
               <h2
                 style={{
                   display: "flex",
@@ -146,6 +146,7 @@ const ChatWindow = ({ messages, sendMessage }) => {
                 Live Interview Chat
               </h2>
               <textarea
+              style={{height:"113px"}}
                 defaultValue={spokentext.messege}
                 onChange={(e) => handleMessageChange(e)}
               />
@@ -200,8 +201,9 @@ const ChatWindow = ({ messages, sendMessage }) => {
 
                   <Button
                     className="btn-2"
-                    style={{ width: "208px" }}
+                    style={{ width: "200px" }}
                     block
+                    color="success"
                     onClick={() => {
                       handleSendMessage();
                     }}
@@ -213,22 +215,23 @@ const ChatWindow = ({ messages, sendMessage }) => {
                   style={{ width: "100%" }}
                   block
                   color="success"
+                  className="btn-2"
                   onClick={() => Accuracy()}
                 >
                          Accuracy          {" "}
                 </Button>
               </CardBody>
             </Card>
-              </CardBody>
-            </Card>
-            <Button
+              {/* </CardBody>
+            </Card> */}
+            {/* <Button
               className="btn-2"
               style={{ width: "100%" }}
               block
               onClick={() => Accuracy()}
             >
               checkSpeechRecognition{" "}
-            </Button>
+            </Button> */}
           </Container>
         </Col>
       </Row>
