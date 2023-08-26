@@ -15,19 +15,106 @@
 
  */
 /*     brand Colors              */
+/* new-code start*/
+.row {
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+}
+.heading-int {
+  border-bottom: 1px solid #ffffff1f;
+  margin-bottom: 50px;
+}
+.heading-int h1 {
+  font-weight: 600;
+  margin: 25px;
+}
+video {
+  width: 100%;
+  border-radius: 30px;
+}
+.row {
+  margin-left: 0;
+  margin-right: 0;
+}
+.card {
+  border-radius: 30px;
+  height: 100%;
+  padding: 50px;
+  border-radius: 30px !important;
+}
+textarea {
+  height: 125px;
+  margin: 0 50px;
+  background-color: #1e1e2f;
+  border: none;
+  color: white;
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 30px !important;
+}
+textarea:focus-visible {
+  border: 1px solid white;
+  outline: none;
+}
+
+.card .card-body {
+  padding: 0px !important;
+}
+.alert.alert-success {
+  background-color: #007bbf !important;
+  border-radius: 9px;
+}
+.alert {
+  margin-bottom: 1.8rem !important;
+}
+.chatboat {
+  height: 100%;
+  max-height: 325px;
+  overflow-y: scroll;
+}
+.btn-success {
+  background-image: linear-gradient(
+    to bottom left,
+    #007bbf,
+    #1e1e2f,
+    #007bbf
+  ) !important;
+}
+/* Apply custom scrollbar styles to an element with overflow */
+.element-with-scrollbar {
+  overflow-y: scroll; /* or auto if you want it to appear only when necessary */
+  scrollbar-width: thin; /* width of the scrollbar, adjust as needed */
+  scrollbar-color: #555555 #f0f0f0; /* color of the thumb and track */
+}
+
+/* Style the scrollbar thumb (the draggable part) */
+.element-with-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #555555;
+  border-radius: 6px; /* round the edges of the thumb */
+}
+
+/* Style the scrollbar track (the area behind the thumb) */
+.element-with-scrollbar::-webkit-scrollbar-track {
+  background-color: #f0f0f0;
+}
+
+/* Optionally, you can style the scrollbar corner as well */
+.element-with-scrollbar::-webkit-scrollbar-corner {
+  background-color: #f0f0f0;
+}
+/* new-code end */
 /* navbar color */
-.formGrid{
-  height:100vh;
+.formGrid {
+  height: 100vh;
 
   background-position: center;
   background-repeat: no-repeat;
-  background-size:cover;
+  background-size: cover;
   margin: 0;
 }
-.formCard{
-  
-  background-color: #a7d6ff!important;
-  border-radius: 30px!important;
+.formCard {
+  background-color: #a7d6ff !important;
+  border-radius: 30px !important;
 }
 
 :root {
@@ -97,8 +184,7 @@ section {
 }
 
 body {
-  margin: 0
-  ;
+  margin: 0;
   font-family: "Poppins", sans-serif;
   font-size: 0.875rem;
   font-weight: 400;
@@ -2652,7 +2738,6 @@ fieldset:disabled a.btn {
 .btn-start:hover:after {
   width: 100%;
 }
-
 
 /* .btn-primary {
   color: #ffffff;
@@ -12205,24 +12290,9 @@ fieldset[disabled] .btn-primary.active {
 
 .btn-success {
   background: #00f2c3;
-  background-image: -webkit-linear-gradient(
-    to bottom left,
-    #00f2c3,
-    #0098f0,
-    #00f2c3
-  );
-  background-image: -o-linear-gradient(
-    to bottom left,
-    #00f2c3,
-    #0098f0,
-    #00f2c3
-  );
-  background-image: -moz-linear-gradient(
-    to bottom left,
-    #00f2c3,
-    #0098f0,
-    #00f2c3
-  );
+  background-image: linear-gradient(to bottom left, #007bbf, #1e1e2f, #007bbf);
+  background-image: linear-gradient(to bottom left, #007bbf, #1e1e2f, #007bbf);
+  background-image: linear-gradient(to bottom left, #007bbf, #1e1e2f, #007bbf);
   background-image: linear-gradient(to bottom left, #00f2c3, #0098f0, #00f2c3);
   background-size: 210% 210%;
   background-position: top right;
