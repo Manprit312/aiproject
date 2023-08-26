@@ -18,7 +18,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
-import Form1 from "components/Form/Form1";
+
 import AdminLayout from "layouts/Admin/Admin.js";
 import RTLLayout from "layouts/RTL/RTL.js";
 import UserForm from "components/Form/Form";
@@ -31,7 +31,7 @@ import ThemeContextWrapper from "./components/ThemeWrapper/ThemeWrapper";
 import BackgroundColorWrapper from "./components/BackgroundColorWrapper/BackgroundColorWrapper";
 import Home from "views/Home";
 import Interview from "views/Interview";
-import App from "components/chatgpt";
+import ChatWindow from "components/chatwindow";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
@@ -39,14 +39,9 @@ root.render(
     <BackgroundColorWrapper>
       <BrowserRouter>
         <Routes>
-        <Route path="/interview" element={<App />} />
-          <Route path="/home" element={<Home />} />
-          <Route
-            path="/"
-            element={<Interview />}
-          />
-          <Route path="/signup" element={<UserForm/>}/>
-          <Route path="/signup1" element={<Form1/>}/>
+          <Route path="/home" element={<ChatWindow />} />
+          <Route path="/" element={<Interview />} />
+          <Route path="/signup" element={<UserForm />} />
         </Routes>
       </BrowserRouter>
     </BackgroundColorWrapper>

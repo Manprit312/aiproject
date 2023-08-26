@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Mic } from "@mui/icons-material";
+import { Margin, Mic } from "@mui/icons-material";
+import axios from "axios";
 import { useSpeechRecognition } from "react-speech-kit";
+import "../assets/css/black-dashboard-react.css";
 import {
   Alert,
   UncontrolledAlert,
@@ -15,7 +17,6 @@ import {
   Input,
   Container,
 } from "reactstrap";
-import axios from "axios";
 
 import NotificationAlert from "react-notification-alert";
 import Webcam from "react-webcam";
@@ -55,7 +56,7 @@ const ChatWindow = ({ messages, sendMessage }) => {
     const res = await axios.post("http://localhost:5000/chatapiquestion", data);
 
     setmessage([...message, res.data]);
- 
+
     setQuestion(res.data.messege.slice(4));
   };
 
@@ -108,8 +109,6 @@ const ChatWindow = ({ messages, sendMessage }) => {
   const Accuracy = async () => {
     const data = { question: Question, answer: spokentext.messege };
     const res = axios.post("http://localhost:5000/checkAnswer", data);
-
-   
     setAccuracy(res);
   };
 
@@ -119,42 +118,54 @@ const ChatWindow = ({ messages, sendMessage }) => {
 
   return (
     <div className="content">
+      <div className="heading-int">
+        <h1>Live Interview</h1>
+      </div>
       <Row>
         <Col md={"6"}>
           <Webcam />
         </Col>
         <Col md={"6"}>
           <Container>
-            <Card style={{ height: "100vh" }}>
-              <h1
+            <Card>
+              <h2
                 style={{
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
+                  fontSize: "28px",
+                  fontWeight: "600",
+                  margin: "0px 0 30px 0",
                 }}
               >
                 Live Interview Chat
-              </h1>
+              </h2>
               <textarea
-                style={{ height: "113px" }}
                 defaultValue={spokentext.messege}
                 onChange={(e) => handleMessageChange(e)}
               />
               <CardBody>
-                {message.map((message, index) =>
-                  message.id == 2 ? (
-                    <UncontrolledAlert
-                      color={Accu =="The answer to this question does not match the question so the accuracy percentage would be 0%." ? "danger" : "success"}
-                      key={index}
-                    >
-                      {message.messege}
-                    </UncontrolledAlert>
-                  ) : (
-                    <UncontrolledAlert color="info" key={index}>
-                      {message.messege}
-                    </UncontrolledAlert>
-                  )
-                )}
+                <div className="chatboat">
+                  {message.map((message, index) =>
+                    message.id == 2 ? (
+                      <UncontrolledAlert
+                        color={
+                          Accu ==
+                          "The answer to this question does not match the question so the accuracy percentage would be 0%."
+                            ? "danger"
+                            : "success"
+                        }
+                        key={index}
+                      >
+                        {message.messege}
+                      </UncontrolledAlert>
+                    ) : (
+                      <UncontrolledAlert color="info" key={index}>
+                        {message.messege}
+                      </UncontrolledAlert>
+                    )
+                  )}
+                </div>
                 <div className="react-notification-alert-container">
                   <NotificationAlert color={"primary"} />
                 </div>
@@ -163,6 +174,7 @@ const ChatWindow = ({ messages, sendMessage }) => {
                     display: "flex",
                     alignItems: "baseline",
                     justifyContent: "space-between",
+                    marginTop: "20px",
                   }}
                 >
                   <FormGroup>
@@ -182,9 +194,9 @@ const ChatWindow = ({ messages, sendMessage }) => {
                   </FormGroup>
 
                   <Button
-                    style={{ width: "200px" }}
+                    className="btn-2"
+                    style={{ width: "208px" }}
                     block
-                    color="success"
                     onClick={() => {
                       handleSendMessage();
                     }}
@@ -195,12 +207,12 @@ const ChatWindow = ({ messages, sendMessage }) => {
               </CardBody>
             </Card>
             <Button
+              className="btn-2"
               style={{ width: "100%" }}
               block
-              color="success"
               onClick={() => Accuracy()}
             >
-                                  checkSpeechRecognition                  {" "}
+              checkSpeechRecognition{" "}
             </Button>
           </Container>
         </Col>
