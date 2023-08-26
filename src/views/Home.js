@@ -7,7 +7,7 @@ let faceio;
 const Home = () => {
   const Navigate = useNavigate();
   useEffect(() => {
-    faceio = new FaceIO("fioa769a");
+    faceio = new window.FaceIO("fioa769a");
   }, []);
   const [permissions, setPermissions] = useState();
   const [permission, setPermission] = useState(false);

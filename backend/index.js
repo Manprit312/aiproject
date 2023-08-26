@@ -56,7 +56,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 
-const secretchatgpt = "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";
+const secretchatgpt = "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";
 
 const configuration = new Configuration({
   apiKey: secretchatgpt,
@@ -88,7 +88,7 @@ app.post("/checkAnswer", async (req, res) => {
   try {
     const completion = await openai.createCompletion({
       model: "text-davinci-003",
-      prompt: `calculate accuracy percentage for question ${req.body.answer} for answer ${req.body.question} `,
+      prompt: `calculate accuracy percentage for question ${req.body.answer} for answer ${req.body.question}`,
       max_tokens: 1024,
       n: 1,
       stop: null,

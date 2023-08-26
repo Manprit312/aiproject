@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Mic } from "@mui/icons-material";
 import { useSpeechRecognition } from "react-speech-kit";
+
 import {
   UncontrolledAlert,
   Button,
@@ -20,7 +21,7 @@ const ChatWindow = ({ messages, sendMessage }) => {
   const [micColor, setMicColor] = useState("error");
   const [ready, setready] = useState(false);
   const [Question, setQuestion] = useState("");
-  const [Answer, setAnswer] = useState("");
+  const [Answer, setAnswer] = useState(null);
   const [Accu, setAccuracy] = useState("");
   const handleMessageChange = (e) => {
     const data = { messege: e.target.value, id: 2 };
@@ -31,8 +32,17 @@ const ChatWindow = ({ messages, sendMessage }) => {
   const [spokentext, setSpokenText] = useState({});
 
   useEffect(() => {
+    const webgazer = window.webgazer;
+    webgazer
+      .setGazeListener((data, clock) => {
+        setAnswer(clock);
+       
+      })
+      .begin();
+    Answer > 7000 ? alert("it seems you are  looking somewhere else") : null;
     getQuestion();
   }, []);
+
   const [textToRead, setTextToRead] = useState("");
   const [speechRecognitionAvailable, setSpeechRecognitionAvailable] =
     useState(false);
@@ -51,7 +61,7 @@ const ChatWindow = ({ messages, sendMessage }) => {
     const res = await axios.post("http://localhost:5000/chatapiquestion", data);
 
     setmessage([...message, res.data]);
- 
+
     setQuestion(res.data.messege.slice(4));
   };
   const checkSpeechRecognition = () => {
@@ -104,7 +114,6 @@ const ChatWindow = ({ messages, sendMessage }) => {
     const data = { question: Question, answer: spokentext.messege };
     const res = axios.post("http://localhost:5000/checkAnswer", data);
 
-   
     setAccuracy(res);
   };
 
@@ -115,9 +124,7 @@ const ChatWindow = ({ messages, sendMessage }) => {
   return (
     <div className="content">
       <Row>
-        <Col md={"6"}>
-          <Webcam />
-        </Col>
+        <Col md={"6"}>{/* <Webcam /> */}</Col>
         <Col md={"6"}>
           <Container>
             <Card style={{ height: "100vh" }}>
@@ -139,7 +146,12 @@ const ChatWindow = ({ messages, sendMessage }) => {
                 {message.map((message, index) =>
                   message.id == 2 ? (
                     <UncontrolledAlert
-                      color={Accu =="The answer to this question does not match the question so the accuracy percentage would be 0%." ? "danger" : "success"}
+                      color={
+                        Accu ==
+                        "The answer to this question does not match the question so the accuracy percentage would be 0%."
+                          ? "danger"
+                          : "success"
+                      }
                       key={index}
                     >
                       {message.messege}
@@ -186,25 +198,17 @@ const ChatWindow = ({ messages, sendMessage }) => {
                   >
                     Submit Answer
                   </Button>
-                  <Button
-                    style={{ width: "200px" }}
-                    block
-                    color="success"
-                    onClick={() => Accuracy()}
-                  >
-                    checkSpeechRecognition
-                  </Button>
                 </div>
+                <Button
+                  style={{ width: "100%" }}
+                  block
+                  color="success"
+                  onClick={() => Accuracy()}
+                >
+                         Accuracy          {" "}
+                </Button>
               </CardBody>
             </Card>
-            <Button
-              style={{ width: "100%" }}
-              block
-              color="success"
-              onClick={() => Accuracy()}
-            >
-                                  checkSpeechRecognition                  {" "}
-            </Button>
           </Container>
         </Col>
       </Row>
