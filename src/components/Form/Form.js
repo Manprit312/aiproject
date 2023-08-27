@@ -17,6 +17,7 @@ import * as Yup from "yup";
 import { TextField } from "formik-material-ui";
 import "../../assets/css/black-dashboard-react.css";
 import { TableRestaurant } from "@mui/icons-material";
+import { Navigate, useNavigate } from "react-router-dom";
 const uppercaseRegEx = /(?=.*[A-Z])/;
 const numericRegEx = /(?=.*[0-9])/;
 const lengthRegEx = /(?=.{6,})/;
@@ -38,6 +39,7 @@ const options = [
   { label: "Node Js", value: "Node.js" },
 ];
 
+
 //password validation
 
 //validation schema
@@ -53,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const UserForm = () => {
+  const navigate=useNavigate();
   const [Skills, SEtskill] = useState([]);
   const [displayskills, setDisplayskills] = useState([]);
   const classes = useStyle();
@@ -73,6 +76,8 @@ const UserForm = () => {
   };
   const onSubmit = (values) => {
     console.log(values);
+    navigate('/interview')
+
   };
   return (
     <Grid
@@ -174,7 +179,7 @@ const UserForm = () => {
                       variant="contained"
                       color="primary"
                       type="Submit"
-                      className={classes.button}
+                      className={classes.button}  
                     >
                       REGISTER
                     </Button>

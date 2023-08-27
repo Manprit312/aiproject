@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Margin, Mic } from "@mui/icons-material";
-import axios from "axios";
+import { Mic } from "@mui/icons-material";
 import { useSpeechRecognition } from "react-speech-kit";
-import "../assets/css/black-dashboard-react.css";
 
 import {
   UncontrolledAlert,
@@ -14,6 +12,7 @@ import {
   FormGroup,
   Container,
 } from "reactstrap";
+import axios from "axios";
 
 import NotificationAlert from "react-notification-alert";
 import Webcam from "react-webcam";
@@ -33,14 +32,24 @@ const ChatWindow = ({ messages, sendMessage }) => {
   const [spokentext, setSpokenText] = useState({});
 
   useEffect(() => {
-    const webgazer = window.webgazer;
-    webgazer
-      .setGazeListener((data, clock) => {
-        setAnswer(clock);
-       
-      })
-      .begin();
-    Answer > 7000 ? alert("it seems you are  looking somewhere else") : null;
+    setTimeout(() => {
+      const webgazer = window.webgazer;
+      webgazer
+        .setGazeListener((data, clock) => {
+          setAnswer(clock);
+          console.log(data, "data");
+          console.log(clock, "clock");
+          if (data == null) {
+            alert("Suspicious Activity Detected");
+          }
+          // document.getElementById("webgazerGazeDot").style.display =
+          //   "none!important";
+        })
+        .begin();
+
+      console.log(Answer, "answerrrr");
+    }, 3000);
+
     getQuestion();
   }, []);
 
@@ -63,7 +72,6 @@ const ChatWindow = ({ messages, sendMessage }) => {
 
     setmessage([...message, res.data]);
 
-
     setQuestion(res.data.messege.slice(4));
   };
   const checkSpeechRecognition = () => {
@@ -72,8 +80,7 @@ const ChatWindow = ({ messages, sendMessage }) => {
     }
     return false;
   };
-  console.log(message);
-  console.log(listen, "llllllllllllll");
+
   // Initialize the speech recognition object
   const initializeSpeechRecognition = () => {
     const SpeechRecognition =
@@ -125,53 +132,45 @@ const ChatWindow = ({ messages, sendMessage }) => {
 
   return (
     <div className="content">
-      <div className="heading-int">
-        <h1>Live Interview</h1>
-      </div>
       <Row>
         <Col md={"6"}>{/* <Webcam /> */}</Col>
         <Col md={"6"}>
           <Container>
-            <Card style={{height:"100vh"}}>
-              <h2
+            <Card style={{ height: "100vh" }}>
+              <h1
                 style={{
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: "28px",
-                  fontWeight: "600",
-                  margin: "0px 0 30px 0",
                 }}
               >
                 Live Interview Chat
-              </h2>
+              </h1>
               <textarea
-              style={{height:"113px"}}
+                style={{ height: "113px" }}
                 defaultValue={spokentext.messege}
                 onChange={(e) => handleMessageChange(e)}
               />
               <CardBody>
-                <div className="chatboat">
-                  {message.map((message, index) =>
-                    message.id == 2 ? (
-                      <UncontrolledAlert
-                        color={
-                          Accu ==
-                          "The answer to this question does not match the question so the accuracy percentage would be 0%."
-                            ? "danger"
-                            : "success"
-                        }
-                        key={index}
-                      >
-                        {message.messege}
-                      </UncontrolledAlert>
-                    ) : (
-                      <UncontrolledAlert color="info" key={index}>
-                        {message.messege}
-                      </UncontrolledAlert>
-                    )
-                  )}
-                </div>
+                {message.map((message, index) =>
+                  message.id == 2 ? (
+                    <UncontrolledAlert
+                      color={
+                        Accu ==
+                        "The answer to this question does not match the question so the accuracy percentage would be 0%."
+                          ? "danger"
+                          : "success"
+                      }
+                      key={index}
+                    >
+                      {message.messege}
+                    </UncontrolledAlert>
+                  ) : (
+                    <UncontrolledAlert color="info" key={index}>
+                      {message.messege}
+                    </UncontrolledAlert>
+                  )
+                )}
                 <div className="react-notification-alert-container">
                   <NotificationAlert color={"primary"} />
                 </div>
@@ -180,7 +179,6 @@ const ChatWindow = ({ messages, sendMessage }) => {
                     display: "flex",
                     alignItems: "baseline",
                     justifyContent: "space-between",
-                    marginTop: "20px",
                   }}
                 >
                   <FormGroup>
@@ -200,10 +198,10 @@ const ChatWindow = ({ messages, sendMessage }) => {
                   </FormGroup>
 
                   <Button
-                    className="btn-2"
                     style={{ width: "200px" }}
                     block
                     color="success"
+                    z
                     onClick={() => {
                       handleSendMessage();
                     }}
@@ -215,23 +213,12 @@ const ChatWindow = ({ messages, sendMessage }) => {
                   style={{ width: "100%" }}
                   block
                   color="success"
-                  className="btn-2"
                   onClick={() => Accuracy()}
                 >
                          Accuracy          {" "}
                 </Button>
               </CardBody>
             </Card>
-              {/* </CardBody>
-            </Card> */}
-            {/* <Button
-              className="btn-2"
-              style={{ width: "100%" }}
-              block
-              onClick={() => Accuracy()}
-            >
-              checkSpeechRecognition{" "}
-            </Button> */}
           </Container>
         </Col>
       </Row>
