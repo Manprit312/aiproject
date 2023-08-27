@@ -18,14 +18,14 @@ import {
 import axios from "axios";
 
 import NotificationAlert from "react-notification-alert";
-
+var dataArray = [];
 const ChatWindow = ({ messages, sendMessage }) => {
   const [message, setmessage] = useState([]);
   const synth = window.speechSynthesis;
   const [textToRead, setTextToRead] = useState("");
   const [Answertosee, setAnswertosee] = useState([]);
   const [micColor, setMicColor] = useState("error");
-
+  const [showreport, setshowReport] = useState(false);
   const [Question, setQuestion] = useState("");
   const [Answer, setAnswer] = useState("");
   const [Accu, setAccuracy] = useState("");
@@ -33,6 +33,7 @@ const ChatWindow = ({ messages, sendMessage }) => {
     const data = { messege: e.target.value, id: 2 };
     // setmessage([...message, data]);
     // setAnswer(e.target.value);
+    setAnswer(e.target.value);
     setSpokenText(data);
   };
 
@@ -51,7 +52,6 @@ const ChatWindow = ({ messages, sendMessage }) => {
     const webgazer = window.webgazer;
     webgazer
       .setGazeListener((data, clock) => {
-        setAnswer(clock);
         console.log(data, "data");
         console.log(clock, "clock");
         if (data == null) {
@@ -85,7 +85,6 @@ const ChatWindow = ({ messages, sendMessage }) => {
   const { listen, stop } = useSpeechRecognition({
     onResult: (result) => {
       const data = { messege: result, id: 2 };
-    
 
       // text.push(result).toString();
       setSpokenText(data);
@@ -104,6 +103,7 @@ const ChatWindow = ({ messages, sendMessage }) => {
 
   const micOff = () => {
     setmessage([...message, spokentext]);
+    setAnswer(spokentext.messege);
     setMicColor("error");
     stop();
   };
@@ -112,6 +112,9 @@ const ChatWindow = ({ messages, sendMessage }) => {
     console.log("prinary");
     setMicColor("primary");
     listen();
+  };
+  const finishInterview = () => {
+    setshowReport(true);
   };
   // Initialize speech synthesis and read the provided text
   const readText = (t) => {
@@ -129,6 +132,20 @@ const ChatWindow = ({ messages, sendMessage }) => {
     if (Accu.includes("No")) {
       setAnswertosee([...Answertosee, "No"]);
     }
+
+    function addData() {
+      // Create a new object with the provided answer and question
+      const newData = {
+        answer: Answer,
+        question: Question,
+        rightAnswer: res.data,
+        right: Accu.includes("No") ? false : true,
+      };
+
+      // Add the new object to the array
+      dataArray.push(newData);
+    }
+    addData();
   };
 
   const handleSendMessage = () => {
@@ -138,119 +155,158 @@ const ChatWindow = ({ messages, sendMessage }) => {
   return (
     <div className="content">
       <ToastContainer />
-      <Row>
-        <Col md={"6"}>{/* <Webcam /> */}</Col>
-        <Col md={"6"}>
-          <Container>
-            <Card style={{ height: "100vh" }}>
-              <h1
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                Live Interview Chat
-              </h1>
-              <p>
-                <InfoOutlined />
-                Single Click to start audio recording, double click to stop
-              </p>
-              <textarea
-                style={{ height: "113px" }}
-                defaultValue={spokentext.messege}
-                onChange={(e) => handleMessageChange(e)}
-              />
-              <CardBody>
-                {message.map((message, index) =>
-                  message.id == 2 ? (
-                    <UncontrolledAlert
-                      className="alert-without-close"
-                      color={Answertosee.includes("No") ? "danger" : "success"}
-                      key={index}
-                      closable={false}
-                    >
-                      {message.messege}
-                    </UncontrolledAlert>
-                  ) : (
-                    <UncontrolledAlert
-                      className="alert-without-close"
-                      color="info"
-                      key={index}
-                    >
-                      {message.messege}
-                    </UncontrolledAlert>
-                  )
-                )}
-                <div className="react-notification-alert-container">
-                  <NotificationAlert color={"primary"} icon={null} />
-                </div>
-                <div
+      {!showreport && (
+        <Row>
+          <Col md={"6"}>{/* <Webcam /> */}</Col>
+          <Col md={"6"}>
+            <Container>
+              <Card style={{ height: "100vh" }}>
+                <h1
                   style={{
                     display: "flex",
-                    alignItems: "baseline",
-                    justifyContent: "space-between",
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
                 >
-                  <FormGroup>
-                    <Mic
-                      onClick={() => micControl()}
-                      onDoubleClick={() => micOff()}
-                      style={{
-                        padding: " 6px",
-                        width: "40px",
-                        cursor: "pointer",
-                        borderRadius: "25px",
-                        background: " aliceblue",
-                        height: "40px",
-                      }}
-                      color={micColor}
-                    />
-                  </FormGroup>
+                  Live Interview Chat
+                </h1>
+                <p>
+                  <InfoOutlined />
+                  Single Click to start audio recording, double click to stop
+                </p>
+                <textarea
+                  style={{ height: "113px" }}
+                  defaultValue={spokentext.messege}
+                  onChange={(e) => handleMessageChange(e)}
+                />
+                <CardBody>
+                  {message.map((message, index) =>
+                    message.id == 2 ? (
+                      <UncontrolledAlert
+                        className="alert-without-close"
+                        color={"info"}
+                        key={index}
+                        closable={false}
+                      >
+                        {message.messege}
+                      </UncontrolledAlert>
+                    ) : (
+                      <UncontrolledAlert
+                        className="alert-without-close"
+                        color="info"
+                        key={index}
+                      >
+                        {message.messege}
+                      </UncontrolledAlert>
+                    )
+                  )}
+                  <div className="react-notification-alert-container">
+                    <NotificationAlert color={"primary"} icon={null} />
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "baseline",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <FormGroup>
+                      <Mic
+                        onClick={() => micControl()}
+                        onDoubleClick={() => micOff()}
+                        style={{
+                          padding: " 6px",
+                          width: "40px",
+                          cursor: "pointer",
+                          borderRadius: "25px",
+                          background: " aliceblue",
+                          height: "40px",
+                        }}
+                        color={micColor}
+                      />
+                    </FormGroup>
 
-                  {Answer.length > 0 ? (
+                    {Answer.length > 0 ? (
+                      <Button
+                        style={{ width: "200px" }}
+                        block
+                        color="success"
+                        onClick={() => {
+                          handleSendMessage();
+                        }}
+                      >
+                        Submit Answer
+                      </Button>
+                    ) : null}
                     <Button
                       style={{ width: "200px" }}
                       block
                       color="success"
-                      z
                       onClick={() => {
-                        handleSendMessage();
+                        getQuestion();
                       }}
                     >
-                      Submit Answer
+                      get Question
                     </Button>
-                  ) : null}
+                  </div>
                   <Button
-                    style={{ width: "200px" }}
+                    style={{ width: "100%" }}
                     block
                     color="success"
-                    z
-                    onClick={() => {
-                      getQuestion();
-                    }}
+                    onClick={() => Accuracy()}
                   >
-                    get Question
+                           Accuracy          {" "}
                   </Button>
-                </div>
-                <Button
-                  style={{ width: "100%" }}
-                  block
-                  color="success"
-                  onClick={() => Accuracy()}
-                >
-                         Accuracy          {" "}
-                </Button>
-                {message.length > 10 ? (
-                  <Button style={{ width: "200px" }} block color="success">
-                    finish
-                  </Button>
-                ) : null}
-              </CardBody>
-            </Card>
-          </Container>
-        </Col>
-      </Row>
+                  {message.length > 1 ? (
+                    <Button
+                      style={{ width: "200px" }}
+                      onClick={() => finishInterview()}
+                      block
+                      color="success"
+                    >
+                      finish
+                    </Button>
+                  ) : null}
+                </CardBody>
+              </Card>
+            </Container>
+          </Col>
+        </Row>
+      )}
+      {showreport && (
+        <Container>
+          <Card style={{ height: "100vh" }}>
+            <CardBody>
+              {dataArray.map((report) => (
+                <>
+                  <UncontrolledAlert
+                    className="alert-without-close"
+                    color={"info"}
+                    closable={false}
+                  >
+                    {report.answer}
+                  </UncontrolledAlert>
+
+                  <UncontrolledAlert
+                    className="alert-without-close"
+                    color={!report.right ? "success" : "danger"}
+                    closable={false}
+                  >
+                    {report.question}
+                  </UncontrolledAlert>
+                  <UncontrolledAlert
+                    className="alert-without-close"
+                    color={"warning"}
+                    closable={false}
+                  >
+                    {report.rightAnswer}
+                  </UncontrolledAlert>
+                </>
+              ))}
+            </CardBody>
+          </Card>
+        </Container>
+      )}
     </div>
   );
 };
