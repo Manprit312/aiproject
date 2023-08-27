@@ -7,20 +7,17 @@ let faceio;
 const Home = () => {
   const Navigate = useNavigate();
   useEffect(() => {
-    faceio = new window.FaceIO("fioa769a");
+    if(window!=undefined){
+      faceio = new faceIO("fioa769a");
+    }
   }, []);
-  const [permissions, setPermissions] = useState();
-  const [permission, setPermission] = useState(false);
-  const [stream, setStream] = useState(null);
-  const videoRef = useRef();
 
   const handleRegister = async () => {
-
     try {
       let response = await faceio.enroll({
         locale: "auto",
         payload: {
-          email: "example@gmail.com",
+          email: "manprit.kaur@appsmartz.com",
         },
       });
       console.log("resposnse", response);
@@ -36,7 +33,7 @@ const Home = () => {
      Gender: ${response.details.gender}
 
     Age Approximation: ${response.details.age}`);
-  Navigate("/signup");
+      Navigate("/signup");
     } catch (error) {
       console.log(error);
     }
@@ -63,7 +60,9 @@ const Home = () => {
           </p>
         </div>
         <Button
-          onClick={() =>{  handleRegister()}}
+          onClick={() => {
+            handleRegister();
+          }}
           className="btn-3"
           type="submit"
         >

@@ -126,6 +126,13 @@
   min-height: 60vh;
   max-height: 440px;
 }
+.alert-without-close {
+  .alert {
+    .close {
+      display: none;
+    }
+  }
+}
 .offline-doc .page-header.page-header-mini {
   min-height: 40vh;
   max-height: 340px;

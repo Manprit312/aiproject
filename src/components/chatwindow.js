@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Margin, Mic } from "@mui/icons-material";
-import axios from "axios";
-import { useSpeechRecognition } from "react-speech-kit";
-import "../assets/css/black-dashboard-react.css";
+import { InfoOutlined, Mic } from "@mui/icons-material";
 
+import { useSpeechRecognition } from "react-speech-kit";
+
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   UncontrolledAlert,
   Button,
@@ -14,15 +15,19 @@ import {
   FormGroup,
   Container,
 } from "reactstrap";
+import axios from "axios";
 
 import NotificationAlert from "react-notification-alert";
-import Webcam from "react-webcam";
+
 const ChatWindow = ({ messages, sendMessage }) => {
   const [message, setmessage] = useState([]);
+  const synth = window.speechSynthesis;
+  const [textToRead, setTextToRead] = useState("");
+  const [Answertosee, setAnswertosee] = useState([]);
   const [micColor, setMicColor] = useState("error");
-  const [ready, setready] = useState(false);
+
   const [Question, setQuestion] = useState("");
-  const [Answer, setAnswer] = useState(null);
+  const [Answer, setAnswer] = useState("");
   const [Accu, setAccuracy] = useState("");
   const handleMessageChange = (e) => {
     const data = { messege: e.target.value, id: 2 };
@@ -30,30 +35,57 @@ const ChatWindow = ({ messages, sendMessage }) => {
     // setAnswer(e.target.value);
     setSpokenText(data);
   };
+
+  // Check and initialize speech recognition if available
+
+  if (synth && Question) {
+    const utterance = new SpeechSynthesisUtterance(text);
+    synth.speak(utterance);
+  }
+
   const [spokentext, setSpokenText] = useState({});
 
   useEffect(() => {
+    console.log(Question, "data");
+
     const webgazer = window.webgazer;
     webgazer
       .setGazeListener((data, clock) => {
         setAnswer(clock);
+        console.log(data, "data");
+        console.log(clock, "clock");
+        if (data == null) {
+          alert("Suspicious Activity Detected");
+        }
+        var x = data.x; // X coordinate on the screen
+        var y = data.y; // Y coordinate on the screen
+
+        // Check if gaze is outside a defined region (e.g., outside the screen bounds)
+        var screenWidth = window.innerWidth;
+        console.log(
+          window.innerWidth,
+          window.innerHeight,
+          ">>>>>>>>>>>>>>>>>>>"
+        );
+        var screenHeight = window.innerHeight;
+        var threshold = 1000; // Adjust this threshold as needed
+
+        if (x > window.innerWidth || y > window.innerHeight) {
+          // User is likely not looking at the screen
+          // toast.error("User is not looking at the screen.");
+        } else {
+          // User is likely looking at the screen
+          console.log("User is looking at the screen.");
+        }
       })
       .begin();
-    if (Answer > 7000) {
-      alert("it seems you are  looking somewhere else");
-    }
-    console.log(Answer,"data")
-    getQuestion();
   }, []);
 
-  const [textToRead, setTextToRead] = useState("");
-  const [speechRecognitionAvailable, setSpeechRecognitionAvailable] =
-    useState(false);
   var text = [];
   const { listen, stop } = useSpeechRecognition({
     onResult: (result) => {
       const data = { messege: result, id: 2 };
-      // setmessage([...message, data]);
+    
 
       // text.push(result).toString();
       setSpokenText(data);
@@ -64,38 +96,12 @@ const ChatWindow = ({ messages, sendMessage }) => {
     const res = await axios.post("http://localhost:5000/chatapiquestion", data);
 
     setmessage([...message, res.data]);
-
     setQuestion(res.data.messege.slice(4));
+    readText(res.data.messege.slice(4));
   };
-  const checkSpeechRecognition = () => {
-    if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
-      return true;
-    }
-    return false;
-  };
-  console.log(message);
-  console.log(listen, "llllllllllllll");
+
   // Initialize the speech recognition object
-  const initializeSpeechRecognition = () => {
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
 
-    recognition.continuous = true;
-    recognition.interimResults = true;
-
-    recognition.onresult = (event) => {
-      const transcript = event.results[event.results.length - 1][0].transcript;
-      setTextToRead(transcript);
-    };
-
-    recognition.onend = () => {
-      // Restart the recognition process after it ends
-      recognition.start();
-    };
-
-    recognition.start();
-  };
   const micOff = () => {
     setmessage([...message, spokentext]);
     setMicColor("error");
@@ -108,16 +114,21 @@ const ChatWindow = ({ messages, sendMessage }) => {
     listen();
   };
   // Initialize speech synthesis and read the provided text
-  const readText = () => {
+  const readText = (t) => {
     const synth = window.speechSynthesis;
-    const utterance = new SpeechSynthesisUtterance(textToRead);
+    const utterance = new SpeechSynthesisUtterance(t);
     synth.speak(utterance);
   };
   const Accuracy = async () => {
     const data = { question: Question, answer: spokentext.messege };
-    const res = axios.post("http://localhost:5000/checkAnswer", data);
+    const res = await axios.post("http://localhost:5000/checkAnswer", data);
 
-    setAccuracy(res);
+    setAccuracy(res.data);
+    toast.info(res.data);
+
+    if (Accu.includes("No")) {
+      setAnswertosee([...Answertosee, "No"]);
+    }
   };
 
   const handleSendMessage = () => {
@@ -126,62 +137,59 @@ const ChatWindow = ({ messages, sendMessage }) => {
 
   return (
     <div className="content">
-      <div className="heading-int">
-        <h1>Live Interview</h1>
-      </div>
+      <ToastContainer />
       <Row>
         <Col md={"6"}>{/* <Webcam /> */}</Col>
         <Col md={"6"}>
           <Container>
             <Card style={{ height: "100vh" }}>
-              <h2
+              <h1
                 style={{
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: "28px",
-                  fontWeight: "600",
-                  margin: "0px 0 30px 0",
                 }}
               >
                 Live Interview Chat
-              </h2>
+              </h1>
+              <p>
+                <InfoOutlined />
+                Single Click to start audio recording, double click to stop
+              </p>
               <textarea
                 style={{ height: "113px" }}
                 defaultValue={spokentext.messege}
                 onChange={(e) => handleMessageChange(e)}
               />
               <CardBody>
-                <div className="chatboat">
-                  {message.map((message, index) =>
-                    message.id == 2 ? (
-                      <UncontrolledAlert
-                        color={
-                          Accu ==
-                          "The answer to this question does not match the question so the accuracy percentage would be 0%."
-                            ? "danger"
-                            : "success"
-                        }
-                        key={index}
-                      >
-                        {message.messege}
-                      </UncontrolledAlert>
-                    ) : (
-                      <UncontrolledAlert color="info" key={index}>
-                        {message.messege}
-                      </UncontrolledAlert>
-                    )
-                  )}
-                </div>
+                {message.map((message, index) =>
+                  message.id == 2 ? (
+                    <UncontrolledAlert
+                      className="alert-without-close"
+                      color={Answertosee.includes("No") ? "danger" : "success"}
+                      key={index}
+                      closable={false}
+                    >
+                      {message.messege}
+                    </UncontrolledAlert>
+                  ) : (
+                    <UncontrolledAlert
+                      className="alert-without-close"
+                      color="info"
+                      key={index}
+                    >
+                      {message.messege}
+                    </UncontrolledAlert>
+                  )
+                )}
                 <div className="react-notification-alert-container">
-                  <NotificationAlert color={"primary"} />
+                  <NotificationAlert color={"primary"} icon={null} />
                 </div>
                 <div
                   style={{
                     display: "flex",
                     alignItems: "baseline",
                     justifyContent: "space-between",
-                    marginTop: "20px",
                   }}
                 >
                   <FormGroup>
@@ -200,39 +208,46 @@ const ChatWindow = ({ messages, sendMessage }) => {
                     />
                   </FormGroup>
 
+                  {Answer.length > 0 ? (
+                    <Button
+                      style={{ width: "200px" }}
+                      block
+                      color="success"
+                      z
+                      onClick={() => {
+                        handleSendMessage();
+                      }}
+                    >
+                      Submit Answer
+                    </Button>
+                  ) : null}
                   <Button
-                    className="btn-2"
                     style={{ width: "200px" }}
                     block
                     color="success"
+                    z
                     onClick={() => {
-                      handleSendMessage();
+                      getQuestion();
                     }}
                   >
-                    Submit Answer
+                    get Question
                   </Button>
                 </div>
                 <Button
                   style={{ width: "100%" }}
                   block
                   color="success"
-                  className="btn-2"
                   onClick={() => Accuracy()}
                 >
                          Accuracy          {" "}
                 </Button>
+                {message.length > 10 ? (
+                  <Button style={{ width: "200px" }} block color="success">
+                    finish
+                  </Button>
+                ) : null}
               </CardBody>
             </Card>
-            {/* </CardBody>
-            </Card> */}
-            {/* <Button
-              className="btn-2"
-              style={{ width: "100%" }}
-              block
-              onClick={() => Accuracy()}
-            >
-              checkSpeechRecognition{" "}
-            </Button> */}
           </Container>
         </Col>
       </Row>
