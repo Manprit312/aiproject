@@ -80,6 +80,15 @@ textarea:focus-visible {
     #007bbf
   ) !important;
 }
+.CardHeader {
+  color: white;
+  font-size: 30px;
+  font-weight: 600;
+}
+.formreg {
+  background-color: white !important;
+  border-radius: 30px;
+}
 /* Apply custom scrollbar styles to an element with overflow */
 .element-with-scrollbar {
   overflow-y: scroll; /* or auto if you want it to appear only when necessary */
