@@ -37,10 +37,12 @@ const ChatWindow = ({ messages, sendMessage }) => {
     webgazer
       .setGazeListener((data, clock) => {
         setAnswer(clock);
-       
       })
       .begin();
-    Answer > 7000 ? alert("it seems you are  looking somewhere else") : null;
+    if (Answer > 7000) {
+      alert("it seems you are  looking somewhere else");
+    }
+    console.log(Answer,"data")
     getQuestion();
   }, []);
 
@@ -62,7 +64,6 @@ const ChatWindow = ({ messages, sendMessage }) => {
     const res = await axios.post("http://localhost:5000/chatapiquestion", data);
 
     setmessage([...message, res.data]);
-
 
     setQuestion(res.data.messege.slice(4));
   };
@@ -132,7 +133,7 @@ const ChatWindow = ({ messages, sendMessage }) => {
         <Col md={"6"}>{/* <Webcam /> */}</Col>
         <Col md={"6"}>
           <Container>
-            <Card style={{height:"100vh"}}>
+            <Card style={{ height: "100vh" }}>
               <h2
                 style={{
                   display: "flex",
@@ -146,7 +147,7 @@ const ChatWindow = ({ messages, sendMessage }) => {
                 Live Interview Chat
               </h2>
               <textarea
-              style={{height:"113px"}}
+                style={{ height: "113px" }}
                 defaultValue={spokentext.messege}
                 onChange={(e) => handleMessageChange(e)}
               />
@@ -222,7 +223,7 @@ const ChatWindow = ({ messages, sendMessage }) => {
                 </Button>
               </CardBody>
             </Card>
-              {/* </CardBody>
+            {/* </CardBody>
             </Card> */}
             {/* <Button
               className="btn-2"
