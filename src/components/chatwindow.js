@@ -72,7 +72,7 @@ const ChatWindow = ({ messages, sendMessage }) => {
 
         if (x > window.innerWidth || y > window.innerHeight) {
           // User is likely not looking at the screen
-          // toast.error("User is not looking at the screen.");
+         alert("User is not looking at the screen.");
         } else {
           // User is likely looking at the screen
           console.log("User is looking at the screen.");
@@ -284,7 +284,7 @@ const ChatWindow = ({ messages, sendMessage }) => {
                     color={"info"}
                     closable={false}
                   >
-                    {report.answer}
+                    {report.question}
                   </UncontrolledAlert>
 
                   <UncontrolledAlert
@@ -292,7 +292,7 @@ const ChatWindow = ({ messages, sendMessage }) => {
                     color={!report.right ? "success" : "danger"}
                     closable={false}
                   >
-                    {report.question}
+                    {report.answer}
                   </UncontrolledAlert>
                   <UncontrolledAlert
                     className="alert-without-close"
