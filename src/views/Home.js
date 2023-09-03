@@ -7,7 +7,7 @@ let faceio;
 const Home = () => {
   const Navigate = useNavigate();
   useEffect(() => {
-    if(window!=undefined){
+    if (window !== undefined) {
       faceio = new faceIO("fioa769a");
     }
   }, []);

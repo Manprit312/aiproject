@@ -56,7 +56,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 
-const secretchatgpt = "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";
+const secretchatgpt = "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";
 
 const configuration = new Configuration({
   apiKey: secretchatgpt,

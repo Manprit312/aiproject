@@ -5,6 +5,7 @@ import { useSpeechRecognition } from "react-speech-kit";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "../assets/css/black-dashboard-react.css";
 import {
   UncontrolledAlert,
   Button,
@@ -72,10 +73,10 @@ const ChatWindow = ({ messages, sendMessage }) => {
 
         if (x > window.innerWidth || y > window.innerHeight) {
           // User is likely not looking at the screen
-         alert("User is not looking at the screen.");
+          // alert("User is not looking at the screen.");
         } else {
           // User is likely looking at the screen
-          console.log("User is looking at the screen.");
+          // console.log("User is looking at the screen.");
         }
       })
       .begin();
@@ -154,13 +155,16 @@ const ChatWindow = ({ messages, sendMessage }) => {
 
   return (
     <div className="content">
+      <div className="heading">
+        <h1>Live Interview</h1>
+      </div>
       <ToastContainer />
       {!showreport && (
         <Row>
           <Col md={"6"}>{/* <Webcam /> */}</Col>
           <Col md={"6"}>
             <Container>
-              <Card style={{ height: "100vh" }}>
+              <Card>
                 <h1
                   style={{
                     display: "flex",
@@ -180,26 +184,35 @@ const ChatWindow = ({ messages, sendMessage }) => {
                   onChange={(e) => handleMessageChange(e)}
                 />
                 <CardBody>
-                  {message.map((message, index) =>
-                    message.id == 2 ? (
-                      <UncontrolledAlert
-                        className="alert-without-close"
-                        color={"info"}
-                        key={index}
-                        closable={false}
-                      >
-                        {message.messege}
-                      </UncontrolledAlert>
-                    ) : (
-                      <UncontrolledAlert
-                        className="alert-without-close"
-                        color="info"
-                        key={index}
-                      >
-                        {message.messege}
-                      </UncontrolledAlert>
-                    )
-                  )}
+                  <div
+                    className="msgs"
+                    style={{
+                      height: "100%",
+                      maxHeight: "300px",
+                      overflowY: "scroll",
+                    }}
+                  >
+                    {message.map((message, index) =>
+                      message.id == 2 ? (
+                        <UncontrolledAlert
+                          className="alert-without-close"
+                          color={"info"}
+                          key={index}
+                          closable={false}
+                        >
+                          {message.messege}
+                        </UncontrolledAlert>
+                      ) : (
+                        <UncontrolledAlert
+                          className="alert-without-close"
+                          color="info"
+                          key={index}
+                        >
+                          {message.messege}
+                        </UncontrolledAlert>
+                      )
+                    )}
+                  </div>
                   <div className="react-notification-alert-container">
                     <NotificationAlert color={"primary"} icon={null} />
                   </div>
@@ -208,6 +221,8 @@ const ChatWindow = ({ messages, sendMessage }) => {
                       display: "flex",
                       alignItems: "baseline",
                       justifyContent: "space-between",
+                      marginBottom: "30px",
+                      marginTop: "30px",
                     }}
                   >
                     <FormGroup>
@@ -226,47 +241,67 @@ const ChatWindow = ({ messages, sendMessage }) => {
                       />
                     </FormGroup>
 
-                    {Answer.length > 0 ? (
+                    <div className="buttons" style={{ display: "flex" }}>
+                      {Answer.length > 0 ? (
+                        <Button
+                          className="btn-2"
+                          style={{ width: "210px", margin: "0" }}
+                          block
+                          onClick={() => {
+                            handleSendMessage();
+                          }}
+                        >
+                          Submit Answer
+                        </Button>
+                      ) : null}
                       <Button
-                        style={{ width: "200px" }}
+                        className="btn-2"
+                        style={{ width: "200px", margin: "0px 0 0 12px" }}
                         block
-                        color="success"
                         onClick={() => {
-                          handleSendMessage();
+                          getQuestion();
                         }}
                       >
-                        Submit Answer
+                        get Question
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="buttons-bottom" style={{ display: "flex" }}>
+                    <Button
+                      className="btn-2"
+                      style={{
+                        width: "200px",
+                        margin: "0",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        padding: "14px 23px",
+                        height: "50px",
+                      }}
+                      block
+                      onClick={() => Accuracy()}
+                    >
+                             Accuracy          {" "}
+                    </Button>
+                    {message.length > 1 ? (
+                      <Button
+                        className="btn-2"
+                        style={{
+                          width: "200px",
+                          margin: "0 0 0 12px",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          padding: "14px 23px",
+                          height: "50px",
+                        }}
+                        onClick={() => finishInterview()}
+                        block
+                      >
+                        finish
                       </Button>
                     ) : null}
-                    <Button
-                      style={{ width: "200px" }}
-                      block
-                      color="success"
-                      onClick={() => {
-                        getQuestion();
-                      }}
-                    >
-                      get Question
-                    </Button>
                   </div>
-                  <Button
-                    style={{ width: "100%" }}
-                    block
-                    color="success"
-                    onClick={() => Accuracy()}
-                  >
-                           Accuracy          {" "}
-                  </Button>
-                  {message.length > 1 ? (
-                    <Button
-                      style={{ width: "200px" }}
-                      onClick={() => finishInterview()}
-                      block
-                      color="success"
-                    >
-                      finish
-                    </Button>
-                  ) : null}
                 </CardBody>
               </Card>
             </Container>
@@ -275,7 +310,7 @@ const ChatWindow = ({ messages, sendMessage }) => {
       )}
       {showreport && (
         <Container>
-          <Card style={{ height: "100vh" }}>
+          <Card>
             <CardBody>
               {dataArray.map((report) => (
                 <>
