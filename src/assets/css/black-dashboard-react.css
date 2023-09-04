@@ -118,9 +118,26 @@ textarea:focus-visible {
     #007bbf
   ) !important;
 }
+
 /* Target the scrollbar */
 ::-webkit-scrollbar {
   width: 10px; /* Width of the vertical scrollbar */
+
+.CardHeader {
+  color: white;
+  font-size: 30px;
+  font-weight: 600;
+}
+.formreg {
+  background-color: white !important;
+  border-radius: 30px;
+}
+/* Apply custom scrollbar styles to an element with overflow */
+.element-with-scrollbar {
+  overflow-y: scroll; /* or auto if you want it to appear only when necessary */
+  scrollbar-width: thin; /* width of the scrollbar, adjust as needed */
+  scrollbar-color: #555555 #f0f0f0; /* color of the thumb and track */
+
 }
 
 /* Track styles */
@@ -20257,3 +20274,4 @@ select.form-control option {
 }
 
 /*# sourceMappingURL=black-dashboard-react.css.map */
+}

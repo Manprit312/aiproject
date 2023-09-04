@@ -68,11 +68,10 @@ const UserForm = () => {
 
     email: "",
   };
-  const handleChange = (e,values) => {
+  const handleChange = (e, values) => {
     setDisplayskills(e.target.value);
-    values.skill=displayskills
-    console.log(displayskills)
-
+    values.skill = displayskills;
+    console.log(displayskills);
   };
   const onSubmit = (values) => {
     console.log(values);
@@ -82,14 +81,24 @@ const UserForm = () => {
   return (
     <Grid
       container
-      spacing={1}
       className="formGrid"
       justifyContent="center"
       alignItems="center"
     >
-      <Grid item md={6}>
-        <Card className={`${classes.padding} formCard`}>
-          <CardHeader style={{    color:" #887df8"}} title="REGISTER FORM"></CardHeader>
+      <Grid
+        item
+        md={6}
+        style={{ display: "flex", justifyContent: "center", maxWidth: "40%" }}
+      >
+        <img alt="..." src={require("./ezgif.com-gif-maker.gif")} />
+      </Grid>
+
+      <Grid item md={6} style={{ maxWidth: "40%" }}>
+        <Card className={`${classes.padding} formreg`}>
+          <CardHeader
+            style={{ color: "#1e1e2f" }}
+            title="REGISTER FORM"
+          ></CardHeader>
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
@@ -104,7 +113,6 @@ const UserForm = () => {
                   <CardContent>
                     <Grid item container spacing={1} justifyContent="center">
                       <Grid item xs={12} sm={12} md={12}>
-                        
                         <Field
                           label="Name"
                           variant="outlined"
@@ -114,7 +122,6 @@ const UserForm = () => {
                           component={TextField}
                         />
                       </Grid>
-                  
 
                       <Grid item xs={12} sm={12} md={12}>
                         <FormControl fullWidth variant="outlined">
@@ -125,7 +132,7 @@ const UserForm = () => {
                             labelId="demo-simple-select-outlined-label"
                             id="demo-simple-select-outlined"
                             label="Occupation"
-                            onChange={(e) => handleChange(e,values)}
+                            onChange={(e) => handleChange(e, values)}
                             onBlur={handleBlur}
                             value={displayskills}
                             name="skill"
